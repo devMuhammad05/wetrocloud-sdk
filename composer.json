@@ -1,0 +1,27 @@
+{
+    "name": "wetrocloud/wetrocloud-sdk",
+    "description": "An easy-to-use SDK that enables integration with the WetroCloud API",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "wetrocloud",
+        "php",
+        "sdk",
+        "wetrocloud sdk",
+        "wetrocloud api"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Wetrocloud\\WetrocloudSdk\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Muhammad Yahaya"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require-dev": {
+        "nunomaduro/larastan": "3.x-dev"
+    }
+}
