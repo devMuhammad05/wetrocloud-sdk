@@ -21,7 +21,10 @@
         }
     ],
     "minimum-stability": "dev",
+    "require": {
+        "guzzlehttp/guzzle": "7.9.x-dev"
+    },
     "require-dev": {
-        "nunomaduro/larastan": "3.x-dev"
+        "larastan/larastan": "3.0"
     }
 }
