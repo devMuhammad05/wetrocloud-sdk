@@ -43,7 +43,6 @@ class Wetrocloud
         ]);
     }
 
-
     /**
      * Get the HTTP client instance
      */
@@ -59,7 +58,6 @@ class Wetrocloud
     {
         return $this->baseUrl;
     }
-
 
     /**
      * Create a new collection
@@ -88,5 +86,90 @@ class Wetrocloud
             throw new \RuntimeException("Failed to create collection: " . $e->getMessage());
         }
     }
-    
+
+    /**
+     * Retrieve all collections
+     *
+     * @return array<string, mixed> Response from the API
+     * @throws \RuntimeException
+     */
+    public function listAllCollections(): array
+    {
+        try {
+            $response = $this->client->get('/v1/collection/all/');
+
+            $body = (string) $response->getBody();
+            return json_decode($body, true);
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException("Failed to fetch collections: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Insert resource
+     *
+     * @param string $collectionId The ID of the collection to which the data will be added.
+     * @param string $resource The resource to be added to the collection.
+     * @param string $type The resource to be added to the collection.
+     * @return array<string, mixed> Response from the API
+     * @throws \RuntimeException
+     */
+
+    public function insertResource(string $collectionId, string $resource, string $type): array
+    {
+        try {
+
+            $payload = [
+                'collection_id' => $collectionId,
+                'resource' => $resource,
+                'type' => $type,
+            ];
+
+            $response = $this->client->post('/v1/resource/insert/', [
+                'json' => $payload,
+            ]);
+
+            $body = (string) $response->getBody();
+            return json_decode($body, true);
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException("Failed to fetch collections: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Query collection 
+     *
+     * @param string $collectionId The ID of the collection to which the data will be added.
+     * @param string $requestQuery The query being submitted to the collection.
+     * @param string $jsonSchema   The JSON schema for the query response.
+     * @param string $jsonSchemaRules  Rules for the JSON schema.
+     * @return array<string, mixed> Response from the API
+     * @throws \RuntimeException
+     */
+
+    public function queryCollection(
+        string $collectionId,
+        string $requestQuery,
+        ?string $jsonSchema = null,
+        ?string $jsonSchemaRules = null
+    ): array {
+        try {
+
+            $payload = [
+                'collection_id' => $collectionId,
+                'request_query' => $requestQuery,
+                'json_schema' => $jsonSchema,
+                'json_schema_rules' => $jsonSchemaRules,
+            ];
+
+            $response = $this->client->post('v1/collection/query/', [
+                'json' => $payload,
+            ]);
+
+            $body = (string) $response->getBody();
+            return json_decode($body, true);
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException("Failed to fetch collections: " . $e->getMessage());
+        }
+    }
 }
