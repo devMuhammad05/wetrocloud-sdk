@@ -15,13 +15,29 @@
             "Wetrocloud\\WetrocloudSdk\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Muhammad Yahaya"
         }
     ],
     "minimum-stability": "dev",
+    "require": {
+        "php": "^8.3",
+        "guzzlehttp/guzzle": "7.9.x-dev"
+    },
     "require-dev": {
-        "nunomaduro/larastan": "3.x-dev"
+        "larastan/larastan": "3.0",
+        "pestphp/pest": "4.x-dev",
+        "mockery/mockery": "^1.6"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
