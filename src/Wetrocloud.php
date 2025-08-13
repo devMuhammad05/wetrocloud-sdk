@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wetrocloud\WetrocloudSdk;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
