@@ -1,2 +1,9 @@
 /vendor/
 /index.php
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+/vendor
+/.qodo
