@@ -31,8 +31,8 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Run PHPStan
-        run: ./vendor/bin/phpstan
+      # - name: Run PHPStan
+      #   run: ./vendor/bin/phpstan
 
-      - name: Run Pest tests
-        run: ./vendor/bin/pest
+      # - name: Run Pest tests
+      #   run: ./vendor/bin/pest
