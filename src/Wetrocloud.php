@@ -402,4 +402,30 @@ class Wetrocloud
             throw new \RuntimeException("Failed to convert resource to Markdown: " . $e->getMessage());
         }
     }
+
+    /**
+     * Generate transcript from a resource (e.g., YouTube video).
+     *
+     * @param string $link The URL of the resource (e.g., YouTube video link).
+     * @param string $resourceType The type of resource (e.g., "youtube").
+     * @return array<string, mixed> Response from the API containing transcript data, tokens, and success status.
+     * @throws \RuntimeException
+     */
+    public function transcript(string $link, string $resourceType = 'youtube'): array
+    {
+        try {
+            $payload = [
+                'link'          => $link,
+                'resource_type' => $resourceType,
+            ];
+
+            $response = $this->client->post('/v2/transcript/', [
+                'json' => $payload,
+            ]);
+
+            return $this->decodeResponse($response);
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException("Failed to generate transcript: " . $e->getMessage());
+        }
+    }
 }
