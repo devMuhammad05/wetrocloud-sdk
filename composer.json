@@ -5,10 +5,13 @@
     "license": "MIT",
     "keywords": [
         "wetrocloud",
+        "RAG",
+        "Data Extraction",
         "php",
         "sdk",
         "wetrocloud sdk",
         "wetrocloud api"
+
     ],
     "autoload": {
         "psr-4": {
