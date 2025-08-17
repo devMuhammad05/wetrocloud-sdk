@@ -357,8 +357,8 @@ class Wetrocloud
      * @throws \RuntimeException
      * **/
 
-     public function imageToText(string $imageUrl, string $requestQuery): array
-     {
+    public function imageToText(string $imageUrl, string $requestQuery): array
+    {
         try {
             $payload = [
                 'image_url' => $imageUrl,
@@ -370,7 +370,6 @@ class Wetrocloud
             ]);
 
             return $this->decodeResponse($response);
-            
         } catch (\JsonException $e) {
             throw new \RuntimeException("Failed to encode messages: " . $e->getMessage());
         } catch (GuzzleException $e) {
@@ -378,5 +377,29 @@ class Wetrocloud
         }
     }
 
+    /**
+     * Convert a resource (file, web, image) to Markdown
+     *
+     * @param string $resource The resource URL (file, web page, or image)
+     * @param string $resourceType The type of resource: "file", "web", or "image"
+     * @return array<string, mixed> Response from the API containing response, tokens, and success status
+     * @throws \RuntimeException
+     */
+    public function markdownConverter(string $resource, string $resourceType): array
+    {
+        try {
+            $payload = [
+                'link'       => $resource,
+                'resource_type'  => $resourceType,
+            ];
 
+            $response = $this->client->post('/v2/markdown-converter/', [
+                'json' => $payload,
+            ]);
+
+            return $this->decodeResponse($response);
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException("Failed to convert resource to Markdown: " . $e->getMessage());
+        }
+    }
 }
