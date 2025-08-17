@@ -29,10 +29,10 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.3",
-        "guzzlehttp/guzzle": "7.9"
+        "guzzlehttp/guzzle": "^7.9"
     },
     "require-dev": {
-        "larastan/larastan": "3.0",
+        "larastan/larastan": "^3.0",
         "pestphp/pest": "^3.8.2",
         "mockery/mockery": "^1.6"
     },
