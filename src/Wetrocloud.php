@@ -60,7 +60,7 @@ class Wetrocloud
         return $this->baseUrl;
     }
 
-     /**
+    /**
      * Central JSON decoder for all API responses.
      *
      * @param ResponseInterface $response
@@ -71,17 +71,17 @@ class Wetrocloud
     {
         $body = (string) $response->getBody();
         $decoded = json_decode($body, true);
-    
+
         if (!is_array($decoded)) {
             throw new \RuntimeException(
                 "Invalid API response: expected JSON object, got " . $body
             );
         }
-    
+
         /** @var array<string, mixed> $decoded */
         return $decoded;
     }
-    
+
 
     /**
      * Create a new collection
@@ -104,7 +104,6 @@ class Wetrocloud
             ]);
 
             return $this->decodeResponse($response);
-
         } catch (GuzzleException $e) {
             throw new \RuntimeException("Failed to create collection: " . $e->getMessage(), 0, $e);
         }
@@ -153,7 +152,6 @@ class Wetrocloud
             ]);
 
             return $this->decodeResponse($response);
-
         } catch (GuzzleException $e) {
             throw new \RuntimeException("Failed to fetch collections: " . $e->getMessage());
         }
@@ -190,7 +188,6 @@ class Wetrocloud
             ]);
 
             return $this->decodeResponse($response);
-
         } catch (GuzzleException $e) {
             throw new \RuntimeException("Failed to fetch collections: " . $e->getMessage());
         }
@@ -224,8 +221,7 @@ class Wetrocloud
                 'json' => $payload,
             ]);
 
-           return $this->decodeResponse($response);
-
+            return $this->decodeResponse($response);
         } catch (GuzzleException $e) {
             throw new \RuntimeException("Failed to chat with collection: " . $e->getMessage());
         }
@@ -263,8 +259,7 @@ class Wetrocloud
                 'json' => $payload,
             ]);
 
-           return $this->decodeResponse($response);
-           
+            return $this->decodeResponse($response);
         } catch (GuzzleException $e) {
             throw new \RuntimeException("Failed to categorize resource: " . $e->getMessage());
         }
@@ -291,7 +286,6 @@ class Wetrocloud
             ]);
 
             return $this->decodeResponse($response);
-
         } catch (GuzzleException $e) {
             throw new \RuntimeException("Failed to remove resource: " . $e->getMessage());
         }
@@ -316,9 +310,71 @@ class Wetrocloud
             ]);
 
             return $this->decodeResponse($response);
-
         } catch (GuzzleException $e) {
             throw new \RuntimeException("Failed to delete collection: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Generate text without retrieval-augmented generation (RAG).
+     *
+     * @param array<int, array<string, string>> $messages Array of message objects (role + content)
+     * @param string $model The model identifier (e.g., "llama-3.3-70b")
+     * @return array<string, mixed> Response from the API
+     * @throws \RuntimeException
+     */
+    public function textGeneration(array $messages, string $model): array
+    {
+        try {
+            $payload = [
+                [
+                    'name' => 'messages',
+                    'contents' => json_encode($messages, JSON_THROW_ON_ERROR),
+                ],
+                [
+                    'name' => 'model',
+                    'contents' => $model,
+                ],
+            ];
+
+            $response = $this->client->post('/v1/text-generation/', [
+                'multipart' => $payload,
+            ]);
+
+            return $this->decodeResponse($response);
+        } catch (\JsonException $e) {
+            throw new \RuntimeException("Failed to encode messages: " . $e->getMessage());
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException("Failed to generate text: " . $e->getMessage());
+        }
+    }
+
+    /** 
+     * Extracts text from an image.
+     * @param string $imageUrl  The URL of the image.
+     * @param string $requestQuery  The query to process the image.
+     * @return array <string,  mixed> Response fro the API
+     * @throws \RuntimeException
+     * **/
+
+     public function imageToText(string $imageUrl, string $requestQuery): array
+     {
+        try {
+            $payload = [
+                'image_url' => $imageUrl,
+                'request_query' => $requestQuery,
+            ];
+
+            $response = $this->client->post('/v1/image-to-text/', [
+                'json' => $payload,
+            ]);
+
+            return $this->decodeResponse($response);
+            
+        } catch (\JsonException $e) {
+            throw new \RuntimeException("Failed to encode messages: " . $e->getMessage());
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException("Failed to extract text: " . $e->getMessage());
         }
     }
 

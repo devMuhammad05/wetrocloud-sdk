@@ -447,3 +447,4 @@ test('handles guzzle exception', function () {
     expect(fn() => $wetrocloud->listAllCollections())
         ->toThrow(\RuntimeException::class, 'Failed to fetch collections: Connection failed');
 });
+
