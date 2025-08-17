@@ -3,7 +3,6 @@
 use Wetrocloud\WetrocloudSdk\Wetrocloud;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Exception\RequestException;
 use Mockery;
 
 // Test constructor and basic setup
@@ -566,7 +565,7 @@ test('can convert image to markdown', function () {
         'markdown' => '![Image Description](image-url)\n\nDescription of the image content.',
         'tokens' => 15
     ]));
-
+    
     $mockClient = Mockery::mock(Client::class);
     $mockClient->shouldReceive('post')
         ->with('/v2/markdown-converter/', [
@@ -577,18 +576,54 @@ test('can convert image to markdown', function () {
         ])
         ->once()
         ->andReturn($mockResponse);
-
+    
     $wetrocloud = new Wetrocloud('test-api-key');
     $wetrocloudReflection = new ReflectionClass($wetrocloud);
     $clientProperty = $wetrocloudReflection->getProperty('client');
     $clientProperty->setAccessible(true);
     $clientProperty->setValue($wetrocloud, $mockClient);
-
+    
     $result = $wetrocloud->markdownConverter('https://example.com/image.jpg', 'image');
-
+    
     expect($result)->toBe([
         'success' => true,
         'markdown' => '![Image Description](image-url)\n\nDescription of the image content.',
         'tokens' => 15
+    ]);
+});
+
+// Test transcript method
+test('can generate transcript from youtube video', function () {
+    $mockResponse = new Response(200, [], json_encode([
+        'success' => true,
+        'transcript' => 'Hello, welcome to this video tutorial...',
+        'tokens' => 45,
+        'duration' => '10:30'
+    ]));
+    
+    $mockClient = Mockery::mock(Client::class);
+    $mockClient->shouldReceive('post')
+        ->with('/v2/transcript/', [
+            'json' => [
+                'link' => 'https://www.youtube.com/watch?v=example123',
+                'resource_type' => 'youtube'
+            ]
+        ])
+        ->once()
+        ->andReturn($mockResponse);
+    
+    $wetrocloud = new Wetrocloud('test-api-key');
+    $wetrocloudReflection = new ReflectionClass($wetrocloud);
+    $clientProperty = $wetrocloudReflection->getProperty('client');
+    $clientProperty->setAccessible(true);
+    $clientProperty->setValue($wetrocloud, $mockClient);
+    
+    $result = $wetrocloud->transcript('https://www.youtube.com/watch?v=example123');
+    
+    expect($result)->toBe([
+        'success' => true,
+        'transcript' => 'Hello, welcome to this video tutorial...',
+        'tokens' => 45,
+        'duration' => '10:30'
     ]);
 });
